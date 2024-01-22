@@ -3,12 +3,32 @@
     "crystal": {
       "command": "crystalline",
       "args": [
-        "--stdio"
+	"--stdio"
       ],
       "filetypes": [
-        "crystal"
+	"crystal"
       ],
       "rootPatterns": ["shard.yml"]
     }
-  }
+  },
+
+  "diagnostic.virtualText": true,
+  "diagnostic.virtualTextCurrentLineOnly": false,
+  "diagnostic.checkCurrentLine": true,
+
+  "solargraph.commandPath": "/Users/stuart/.asdf/shims/solargraph",
+  "solargraph.autoformat": true,
+  "solargraph.diagnostics": true,
+  "solargraph.formatting": true,
+
+  "coc.preferences.formatOnSaveFiletypes": [
+    "css",
+    "html",
+    "javascript",
+    "javascript.jsx",
+    "json",
+    "markdown",
+    "ruby",
+    "scss"
+  ]
 }

@@ -1,5 +1,7 @@
 -- mappings
 vim.g.mapleader = ",";
+vim.opt.signcolumn = "yes";
+vim.keymap.set("n", "<leader>h", ":let @/ = \"\"<CR>", { silent = true })
 
 -- set tab to be 2 spaces
 vim.opt.shiftwidth = 2
@@ -46,6 +48,8 @@ require("pckr").add{
       "nvim-lua/plenary.nvim",
       "nvim-tree/nvim-web-devicons",
       "MunifTanjim/nui.nvim",
+    },
+    opts = {
     }
   };
   { "nvim-telescope/telescope.nvim",
@@ -77,8 +81,8 @@ vim.api.nvim_set_keymap("", "<Leader>M", ":Neotree dir=%:p:h:h reveal_file=%:p<C
 vim.api.nvim_set_keymap("", "<Leader>,", ":b#<CR>", { silent = true });
 
 local telescope_builtin = require("telescope.builtin")
-vim.api.nvim_set_keymap("", "<Leader>f", "<CMD>lua require'telescope-config'.project_files()<CR>", { noremap = true, silent = true });
-vim.keymap.set("n", "<leader>g", telescope_builtin.live_grep, {})
+vim.api.nvim_set_keymap("", "<Leader>f", "<CMD>lua require('telescope-config').project_files()<CR>", { noremap = true, silent = true });
+vim.keymap.set("n", "<leader>F", telescope_builtin.live_grep, {})
 vim.keymap.set("n", "<leader>.", telescope_builtin.buffers, {})
 
 -- ###################
@@ -112,7 +116,7 @@ vim.api.nvim_set_keymap('i', '<CR>', 'v:lua.CocConfirm()', { expr = true, silent
 vim.api.nvim_set_keymap('i', '<Tab>', 'v:lua.CocTab()', { expr = true, noremap = true, silent = true })
 _G.CocTab = function()
   if vim.fn['coc#pum#visible']() == 1 then
-    vim.fn['coc#pum#next'](1)
+    return vim.fn['coc#pum#next'](1)
   else
     vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Tab>', true, true, true), 'n', false)
     return ""
@@ -127,3 +131,7 @@ _G.CocConfirm = function()
     return ""
   end
 end
+
+-- Refactoring
+vim.api.nvim_set_keymap("", "<Leader>d", ":CocCommand document.renameCurrentWord<CR>", { silent = true })
+
