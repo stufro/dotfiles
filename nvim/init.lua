@@ -105,12 +105,6 @@ vim.cmd("highlight GitSignsCurrentLineBlame guifg=#555555")
 -- #############################
 -- # syntax + language support #
 -- #############################
--- Crystal
-vim.g.crystal_auto_format = 1;
-vim.api.nvim_set_keymap("", "<Leader>A", ":CrystalSpecSwitch<CR>", { silent = true });
-vim.api.nvim_set_keymap("", "<Leader>t", ":CrystalSpecRunCurrent<CR>", {});
-vim.api.nvim_set_keymap("", "<Leader>T", ":CrystalSpecRunAll<CR>", {});
-
 -- CoC
 vim.api.nvim_set_keymap('i', '<CR>', 'v:lua.CocConfirm()', { expr = true, silent = true })
 vim.api.nvim_set_keymap('i', '<Tab>', 'v:lua.CocTab()', { expr = true, noremap = true, silent = true })
