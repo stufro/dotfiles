@@ -30,6 +30,7 @@ require("pckr").add{
   -- syntax + language support
   "rstacruz/vim-closer";
   "vim-crystal/vim-crystal";
+  "tpope/vim-rails";
   { "neoclide/coc.nvim", branch = "release" };
 
   "lewis6991/gitsigns.nvim";
