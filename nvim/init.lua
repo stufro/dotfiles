@@ -31,6 +31,7 @@ require("pckr").add{
   "rstacruz/vim-closer";
   "vim-crystal/vim-crystal";
   "tpope/vim-rails";
+  "mechatroner/rainbow_csv";
   { "neoclide/coc.nvim", branch = "release" };
 
   "lewis6991/gitsigns.nvim";
@@ -85,6 +86,21 @@ local telescope_builtin = require("telescope.builtin")
 vim.api.nvim_set_keymap("", "<Leader>f", "<CMD>lua require('telescope-config').project_files()<CR>", { noremap = true, silent = true });
 vim.keymap.set("n", "<leader>F", telescope_builtin.live_grep, {})
 vim.keymap.set("n", "<leader>.", telescope_builtin.buffers, {})
+require("telescope").setup {
+  pickers = {
+    buffers = {
+      sort_lastused = true,
+      mappings = {
+        n = {
+          ["d"] = "delete_buffer",
+        },
+        i = {
+          ["<c-d>"] = "delete_buffer",
+        }
+      }
+    }
+  }
+}
 
 -- ###################
 -- # gitsigns config #
