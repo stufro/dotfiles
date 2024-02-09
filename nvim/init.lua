@@ -28,10 +28,15 @@ end
 bootstrap_pckr()
 require("pckr").add{
   -- syntax + language support
-  "rstacruz/vim-closer";
   "vim-crystal/vim-crystal";
-  "tpope/vim-rails";
   "mechatroner/rainbow_csv";
+  "tpope/vim-rails";
+  "tpope/vim-endwise";
+  { "m4xshen/autoclose.nvim",  
+    config = function()
+      require("autoclose").setup()
+    end
+  };
   { "neoclide/coc.nvim", branch = "release" };
 
   "lewis6991/gitsigns.nvim";
@@ -138,8 +143,7 @@ _G.CocConfirm = function()
   if vim.fn['coc#pum#visible']() == 1 then
     return vim.fn['coc#_select_confirm']()
   else
-    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<CR>', true, true, true), 'n', false)
-    return ""
+    return vim.api.nvim_replace_termcodes("<C-g>u<CR><C-r>=coc#on_enter()<CR><C-r>=EndwiseDiscretionary()<CR>", true, true, true)
   end
 end
 
