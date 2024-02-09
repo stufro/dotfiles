@@ -32,6 +32,8 @@ require("pckr").add{
   "mechatroner/rainbow_csv";
   "tpope/vim-rails";
   "tpope/vim-endwise";
+  "slim-template/vim-slim";
+  "thoughtbot/vim-rspec";
   { "m4xshen/autoclose.nvim",  
     config = function()
       require("autoclose").setup()
