@@ -18,6 +18,8 @@
 	"solargraph.autoformat": true,
 	"solargraph.diagnostics": true,
 	"solargraph.formatting": true,
+	"eslint.packageManager": "yarn",
+	"javascript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": true,
 	"coc.preferences.formatOnSaveFiletypes": [
 		"css",
 		"html",

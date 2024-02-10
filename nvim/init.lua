@@ -4,7 +4,8 @@ vim.opt.signcolumn = "yes";
 vim.keymap.set("n", "<leader>h", ":let @/ = \"\"<CR>", { silent = true })
 
 -- set tab to be 2 spaces
-vim.opt.shiftwidth = 2
+vim.opt.shiftwidth = 2;
+vim.opt.expandtab = true;
 
 -- ###############
 -- # pckr config #
