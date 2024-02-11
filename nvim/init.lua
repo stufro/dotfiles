@@ -48,6 +48,21 @@ require("pckr").add{
   "gmr458/vscode_modern_theme.nvim";
   { "nvimdev/dashboard-nvim",
     event = "VimEnter",
+    config = function()
+      require('dashboard').setup {
+        config = {
+          header = {
+            '',
+            '███████ ████████ ██    ██ █ ███████     ██    ██ ██ ███    ███ ',
+            '██         ██    ██    ██   ██          ██    ██ ██ ████  ████ ',
+            '███████    ██    ██    ██   ███████     ██    ██ ██ ██ ████ ██ ',
+            '     ██    ██    ██    ██        ██      ██  ██  ██ ██  ██  ██ ',
+            '███████    ██     ██████    ███████       ████   ██ ██      ██ ',
+            ''
+          }
+        }
+      }
+    end,
     requires = { "nvim-tree/nvim-web-devicons" }
   };
 
@@ -59,8 +74,6 @@ require("pckr").add{
       "nvim-tree/nvim-web-devicons",
       "MunifTanjim/nui.nvim",
     },
-    opts = {
-    }
   };
   { "nvim-telescope/telescope.nvim",
     requires = {
@@ -78,8 +91,6 @@ require("vscode_modern").setup {
   nvim_tree_darker = true,
 }
 vim.cmd.colorscheme("vscode_modern")
-
-require("dashboard").setup();
 
 vim.cmd("set number")
 
