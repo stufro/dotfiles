@@ -2,3 +2,4 @@ coc/
 yarn/
 .DS_Store
 tmuxp/kafka*
+cli-pipeline.yml
