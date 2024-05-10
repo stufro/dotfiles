@@ -7,6 +7,11 @@ vim.keymap.set("n", "<leader>h", ":let @/ = \"\"<CR>", { silent = true })
 vim.opt.shiftwidth = 2;
 vim.opt.expandtab = true;
 
+vim.keymap.set("", "<Left>", "<Nop>", { silent = true })
+vim.keymap.set("", "<Down>", "<Nop>", { silent = true })
+vim.keymap.set("", "<Up>", "<Nop>", { silent = true })
+vim.keymap.set("", "<Right>", "<Nop>", { silent = true })
+
 -- ###############
 -- # pckr config #
 -- ###############
