@@ -19,13 +19,7 @@ local function bootstrap_pckr()
   local pckr_path = vim.fn.stdpath("data") .. "/pckr/pckr.nvim"
 
   if not vim.loop.fs_stat(pckr_path) then
-    vim.fn.system({
-      "git",
-      "clone",
-      "--filter=blob:none",
-      "https://github.com/lewis6991/pckr.nvim",
-      pckr_path
-    })
+    vim.fn.system({ "git", "clone", "--filter=blob:none", "https://github.com/lewis6991/pckr.nvim", pckr_path })
   end
 
   vim.opt.rtp:prepend(pckr_path)
@@ -132,9 +126,7 @@ require("gitsigns").setup {
     add = { text = "+" }
   },
   current_line_blame = true,
-  current_line_blame_opts = {
-    delay = 300,
-  },
+  current_line_blame_opts = { delay = 300, },
 }
 vim.cmd("highlight GitSignsAdd guifg=Green")
 vim.cmd("highlight GitSignsChange guifg=#004acc")
