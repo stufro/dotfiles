@@ -109,20 +109,16 @@ vim.api.nvim_set_keymap("", "<Leader>M", ":Neotree dir=%:p:h:h reveal_file=%:p<C
 vim.api.nvim_set_keymap("", "<Leader>,", ":b#<CR>", { silent = true });
 
 local telescope_builtin = require("telescope.builtin")
-vim.api.nvim_set_keymap("", "<Leader>f", "<CMD>lua require('telescope-config').project_files()<CR>", { noremap = true, silent = true });
+vim.keymap.set("n", "<leader>f", telescope_builtin.find_files, {})
 vim.keymap.set("n", "<leader>F", telescope_builtin.live_grep, {})
 vim.keymap.set("n", "<leader>.", telescope_builtin.buffers, {})
 require("telescope").setup {
   pickers = {
     buffers = {
-      sort_lastused = true,
+      sort_mru = true,
       mappings = {
-        n = {
-          ["d"] = "delete_buffer",
-        },
-        i = {
-          ["<c-d>"] = "delete_buffer",
-        }
+        n = { ["d"] = "delete_buffer", },
+        i = { ["<c-d>"] = "delete_buffer", }
       }
     }
   }
