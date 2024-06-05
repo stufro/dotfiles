@@ -34,9 +34,10 @@ require("pckr").add{
   "tpope/vim-endwise";
   "slim-template/vim-slim";
   "thoughtbot/vim-rspec";
-  { "m4xshen/autoclose.nvim",  
+  { "windwp/nvim-autopairs",
+    event = "InsertEnter",
     config = function()
-      require("autoclose").setup()
+      require("nvim-autopairs").setup {}
     end
   };
   { "neoclide/coc.nvim", branch = "release" };
