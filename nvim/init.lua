@@ -124,7 +124,8 @@ require("neo-tree").setup({
     filtered_items = {
       hide_dotfiles = false,
       hide_gitignored = false,
-    }
+    },
+    use_libuv_file_watcher = true,
   }
 })
 
