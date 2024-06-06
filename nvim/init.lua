@@ -37,9 +37,10 @@ require("pckr").add{
   { "windwp/nvim-autopairs",
     event = "InsertEnter",
     config = function()
-      require("nvim-autopairs").setup {}
+      require("nvim-autopairs").setup({})
     end
   };
+  { "terrortylor/nvim-comment" };
   { "neoclide/coc.nvim", branch = "release" };
 
   "lewis6991/gitsigns.nvim";
@@ -147,6 +148,8 @@ vim.cmd("highlight GitSignsCurrentLineBlame guifg=#555555")
 -- #############################
 -- # syntax + language support #
 -- #############################
+require("nvim_comment").setup({ line_mapping = "<leader>cl", operator_mapping = "<leader>c" })
+
 -- CoC
 vim.api.nvim_set_keymap('i', '<CR>', 'v:lua.CocConfirm()', { expr = true, silent = true })
 vim.api.nvim_set_keymap('i', '<Tab>', 'v:lua.CocTab()', { expr = true, noremap = true, silent = true })
