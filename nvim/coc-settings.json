@@ -11,6 +11,22 @@
       "rootPatterns": [
         "shard.yml"
       ]
+    },
+    "go": {
+      "command": "gopls",
+      "rootPatterns": [
+        "go.work",
+        "go.mod",
+        ".vim/",
+        ".git/",
+        ".hg/"
+      ],
+      "filetypes": [
+        "go"
+      ],
+      "initializationOptions": {
+        "usePlaceholders": true
+      }
     }
   },
   "diagnostic.checkCurrentLine": true,
@@ -28,6 +44,7 @@
     "json",
     "markdown",
     "ruby",
-    "scss"
+    "scss",
+    "go"
   ]
 }
