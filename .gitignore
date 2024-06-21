@@ -3,3 +3,4 @@ yarn/
 .DS_Store
 tmuxp/kafka*
 cli-pipeline.yml
+exercism/user.json
