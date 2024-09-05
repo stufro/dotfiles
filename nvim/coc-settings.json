@@ -30,7 +30,6 @@
     }
   },
   "diagnostic.checkCurrentLine": true,
-  "solargraph.commandPath": "/Users/stuart/.asdf/shims/solargraph",
   "solargraph.autoformat": true,
   "solargraph.diagnostics": true,
   "solargraph.formatting": true,

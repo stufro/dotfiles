@@ -113,6 +113,7 @@ vim.api.nvim_set_keymap("", "<Leader>,", ":b#<CR>", { silent = true });
 local telescope_builtin = require("telescope.builtin")
 vim.keymap.set("n", "<leader>f", telescope_builtin.find_files, {})
 vim.keymap.set("n", "<leader>F", telescope_builtin.live_grep, {})
+vim.api.nvim_set_keymap('v', '<leader>F', 'y<ESC>:Telescope live_grep default_text=<c-r>0<CR>', {}) -- search selection
 vim.keymap.set("n", "<leader>.", telescope_builtin.buffers, {})
 require("telescope").setup {
   pickers = {
@@ -157,28 +158,29 @@ vim.cmd("highlight GitSignsCurrentLineBlame guifg=#555555")
 require("nvim_comment").setup({ line_mapping = "<leader>cl", operator_mapping = "<leader>c" })
 
 -- CoC
-vim.api.nvim_set_keymap('i', '<CR>', 'v:lua.CocConfirm()', { expr = true, silent = true })
-vim.api.nvim_set_keymap('i', '<Tab>', 'v:lua.CocTab()', { expr = true, noremap = true, silent = true })
-_G.CocTab = function()
-  if vim.fn['coc#pum#visible']() == 1 then
-    return vim.fn['coc#pum#next'](1)
-  else
-    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Tab>', true, true, true), 'n', false)
-    return ""
-  end
-end
+local opts = {silent = true, noremap = true, expr = true, replace_keycodes = false}
+vim.keymap.set("i", "<TAB>", 'coc#pum#visible() ? coc#pum#next(1) : "<TAB>"', opts)
+vim.keymap.set("i", "<S-TAB>", [[coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"]], opts)
+vim.keymap.set("i", "<cr>", [[coc#pum#visible() ? coc#pum#confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"]], opts)
 
-_G.CocConfirm = function()
-  if vim.fn['coc#pum#visible']() == 1 then
-    return vim.fn['coc#_select_confirm']()
-  else
-    return vim.api.nvim_replace_termcodes("<C-g>u<CR><C-r>=coc#on_enter()<CR><C-r>=EndwiseDiscretionary()<CR>", true, true, true)
-  end
-end
+-- CoC - Jump to
+vim.keymap.set("n", "gd", "<Plug>(coc-definition)", {silent = true})
+vim.keymap.set("n", "gy", "<Plug>(coc-type-definition)", {silent = true})
+vim.keymap.set("n", "gi", "<Plug>(coc-implementation)", {silent = true})
+vim.keymap.set("n", "gr", "<Plug>(coc-references)", {silent = true})
 
--- Refactoring
-vim.api.nvim_set_keymap("", "<Leader>d", ":CocCommand document.renameCurrentWord<CR>", { silent = true })
+-- CoC - Highlight the symbol and its references on a CursorHold event(cursor is idle)
+vim.api.nvim_create_augroup("CocGroup", {})
+vim.api.nvim_create_autocmd("CursorHold", {
+  group = "CocGroup",
+  command = "silent call CocActionAsync('highlight')",
+  desc = "Highlight symbol under cursor on CursorHold"
+})
 
+-- CoC - Refactoring
+vim.keymap.set("n", "<Leader>d", ":CocCommand document.renameCurrentWord<CR>", { silent = true })
+
+-- Spectre
 vim.keymap.set('n', '<leader>S', '<cmd>lua require("spectre").toggle()<CR>', {
     desc = "Toggle Spectre"
 })
