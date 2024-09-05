@@ -107,7 +107,7 @@ vim.cmd("set number")
 -- # navigation #
 -- ##############
 vim.api.nvim_set_keymap("", "<Leader>m", ":Neotree toggle<CR>", { silent = true });
-vim.api.nvim_set_keymap("", "<Leader>M", ":Neotree dir=%:p:h:h reveal_file=%:p<CR>", { silent = true });
+vim.api.nvim_set_keymap("", "<Leader>M", ":Neotree reveal_file=%:p<CR>", { silent = true });
 vim.api.nvim_set_keymap("", "<Leader>,", ":b#<CR>", { silent = true });
 
 local telescope_builtin = require("telescope.builtin")
