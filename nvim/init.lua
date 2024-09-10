@@ -89,6 +89,14 @@ require("pckr").add{
       "nvim-lua/plenary.nvim"
     }
   };
+  { "ruifm/gitlinker.nvim",
+    requires = {
+      "nvim-lua/plenary.nvim"
+    },
+    config = function()
+      require('gitlinker').setup({ opts = { add_current_line_on_normal_mode = false } })
+    end
+  };
 }
 
 -- ##############
@@ -102,6 +110,7 @@ require("vscode_modern").setup {
 vim.cmd.colorscheme("vscode_modern")
 
 vim.cmd("set number")
+vim.cmd("set nowrap")
 
 -- ##############
 -- # navigation #
