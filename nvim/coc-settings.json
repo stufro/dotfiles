@@ -33,17 +33,6 @@
   "solargraph.autoformat": true,
   "solargraph.diagnostics": true,
   "solargraph.formatting": true,
-  "eslint.packageManager": "yarn",
-  "javascript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": true,
-  "coc.preferences.formatOnSaveFiletypes": [
-    "css",
-    "html",
-    "javascript",
-    "javascript.jsx",
-    "json",
-    "markdown",
-    "ruby",
-    "scss",
-    "go"
-  ]
+  "coc.preferences.formatOnSave": true,
+  "json.enable": true
 }
