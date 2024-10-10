@@ -132,6 +132,9 @@ require("telescope").setup {
         n = { ["d"] = "delete_buffer", },
         i = { ["<c-d>"] = "delete_buffer", }
       }
+    },
+    colorscheme = {
+      enable_preview = true
     }
   }
 }

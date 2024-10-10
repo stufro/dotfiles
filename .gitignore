@@ -4,3 +4,4 @@ yarn/
 tmuxp/kafka*
 cli-pipeline.yml
 exercism/user.json
+gh/*
