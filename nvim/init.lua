@@ -35,6 +35,7 @@ require("pckr").add{
   "tpope/vim-endwise";
   "slim-template/vim-slim";
   "thoughtbot/vim-rspec";
+  "github/copilot.vim";
   { "windwp/nvim-autopairs",
     event = "InsertEnter",
     config = function()
@@ -47,6 +48,15 @@ require("pckr").add{
   "lewis6991/gitsigns.nvim";
   { "nvim-pack/nvim-spectre",
     requires = { 
+      "nvim-lua/plenary.nvim",
+    }
+  };
+  { "CopilotC-Nvim/CopilotChat.nvim",
+    config = function()
+      require("CopilotChat").setup({})
+    end,
+    requires = {
+      "github/copilot.vim",
       "nvim-lua/plenary.nvim",
     }
   };
@@ -115,14 +125,14 @@ vim.cmd("set nowrap")
 -- ##############
 -- # navigation #
 -- ##############
-vim.api.nvim_set_keymap("", "<Leader>m", ":Neotree toggle<CR>", { silent = true });
-vim.api.nvim_set_keymap("", "<Leader>M", ":Neotree reveal_file=%:p<CR>", { silent = true });
-vim.api.nvim_set_keymap("", "<Leader>,", ":b#<CR>", { silent = true });
+vim.keymap.set("", "<Leader>m", ":Neotree toggle<CR>", { silent = true });
+vim.keymap.set("", "<Leader>M", ":Neotree reveal_file=%:p<CR>", { silent = true });
+vim.keymap.set("", "<Leader>,", ":b#<CR>", { silent = true });
 
 local telescope_builtin = require("telescope.builtin")
 vim.keymap.set("n", "<leader>f", telescope_builtin.find_files, {})
 vim.keymap.set("n", "<leader>F", telescope_builtin.live_grep, {})
-vim.api.nvim_set_keymap('v', '<leader>F', 'y<ESC>:Telescope live_grep default_text=<c-r>0<CR>', {}) -- search selection
+vim.keymap.set("v", '<leader>F', "y<ESC>:Telescope live_grep default_text=<c-r>0<CR>", {}) -- search selection
 vim.keymap.set("n", "<leader>.", telescope_builtin.buffers, {})
 require("telescope").setup {
   pickers = {
@@ -206,3 +216,12 @@ vim.keymap.set('n', '<leader>sp', '<cmd>lua require("spectre").open_file_search(
     desc = "Search on current file"
 })
 
+-- Copilot
+vim.keymap.set('i', '<C-l>', '<Plug>(copilot-accept-line)')
+vim.keymap.set('i', '<C-w>', '<Plug>(copilot-accept-word)')
+vim.keymap.set('i', '<C-p>', '<Plug>(copilot-previous)')
+vim.keymap.set('i', '<C-n>', '<Plug>(copilot-next)')
+vim.keymap.set('i', '<C-c>', '<Plug>(copilot-suggest)')
+
+vim.keymap.set('n', '<leader>gc', ':CopilotChat<CR>', { silent = true })
+vim.keymap.set('v', '<leader>gc', 'y<ESC>:CopilotChat <c-r>0<CR>', { silent = true })

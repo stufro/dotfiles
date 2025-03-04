@@ -34,5 +34,6 @@
   "solargraph.diagnostics": true,
   "solargraph.formatting": true,
   "coc.preferences.formatOnSave": true,
+  "coc.preferences.willSaveHandlerTimeout": 2000,
   "json.enable": true
 }
