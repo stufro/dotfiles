@@ -8,6 +8,8 @@ vim.opt.shiftwidth = 2;
 vim.opt.expandtab = true;
 vim.opt.tabstop = 2;
 
+vim.opt.updatetime = 750;
+
 vim.keymap.set("", "<Left>", "<Nop>", { silent = true })
 vim.keymap.set("", "<Down>", "<Nop>", { silent = true })
 vim.keymap.set("", "<Up>", "<Nop>", { silent = true })
