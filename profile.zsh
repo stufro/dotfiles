@@ -1,6 +1,6 @@
 source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-export PATH=/opt/homebrew/bin:/opt/homebrew/sbin:$PATH
+export PATH=/opt/homebrew/bin:/opt/homebrew/sbin:$HOME/.config/scripts:$PATH
 
 export ASDF_DIR=/opt/homebrew/opt/asdf/libexec/
 source /opt/homebrew/opt/asdf/libexec/asdf.sh

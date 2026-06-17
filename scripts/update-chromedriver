@@ -1,0 +1,45 @@
+#!/bin/zsh
+set -e
+
+CHROME_VERSION=$(/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --version | grep -oE '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+')
+MAJOR=$(echo $CHROME_VERSION | cut -d. -f1)
+echo "Chrome: $CHROME_VERSION"
+
+VERSIONS_JSON=$(curl -sf "https://googlechromelabs.github.io/chrome-for-testing/known-good-versions-with-downloads.json")
+
+URL=$(echo "$VERSIONS_JSON" | python3 -c "
+import json, sys
+data = json.load(sys.stdin)
+target = '$CHROME_VERSION'
+versions = [v for v in data['versions'] if v['version'] == target]
+if versions:
+    for d in versions[0]['downloads'].get('chromedriver', []):
+        if d['platform'] == 'mac-arm64':
+            print(d['url'])
+")
+
+if [ -z "$URL" ]; then
+  echo "No exact match for $CHROME_VERSION, trying latest $MAJOR.x..."
+  URL=$(echo "$VERSIONS_JSON" | python3 -c "
+import json, sys
+data = json.load(sys.stdin)
+versions = [v for v in data['versions'] if v['version'].startswith('$MAJOR.')]
+if versions:
+    for d in versions[-1]['downloads'].get('chromedriver', []):
+        if d['platform'] == 'mac-arm64':
+            print(d['url'])
+")
+fi
+
+if [ -z "$URL" ]; then
+  echo "Error: could not find a chromedriver download for Chrome $CHROME_VERSION" >&2
+  exit 1
+fi
+
+echo "Downloading: $URL"
+cd /tmp
+curl -sO "$URL"
+unzip -o chromedriver-mac-arm64.zip
+sudo cp chromedriver-mac-arm64/chromedriver /opt/homebrew/bin/chromedriver
+echo "Done:"
+chromedriver --version
