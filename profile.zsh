@@ -39,7 +39,9 @@ export CRYSTAL_OPTS="--link-flags=-Wl,-ld_classic"
 export PATH="$PATH:/Users/stuart/.local/bin"
 
 # golang
-export GOBIN=$(go env GOROOT)/bin
+if command -v go >/dev/null 2>&1; then
+  export PATH="$(go env GOBIN):$PATH"
+fi
 
 alias ibrew='arch --x86_64 /usr/local/Homebrew/bin/brew'
 alias vim='/opt/homebrew/bin/nvim'
