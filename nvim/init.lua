@@ -37,7 +37,6 @@ require("pckr").add{
   "tpope/vim-endwise";
   "slim-template/vim-slim";
   "thoughtbot/vim-rspec";
-  "github/copilot.vim";
   { "windwp/nvim-autopairs",
     event = "InsertEnter",
     config = function()
@@ -53,16 +52,6 @@ require("pckr").add{
       "nvim-lua/plenary.nvim",
     }
   };
-  { "CopilotC-Nvim/CopilotChat.nvim",
-    config = function()
-      require("CopilotChat").setup({})
-    end,
-    requires = {
-      "github/copilot.vim",
-      "nvim-lua/plenary.nvim",
-    }
-  };
-
   -- appearance
   "gmr458/vscode_modern_theme.nvim";
   { "nvimdev/dashboard-nvim",
@@ -299,13 +288,3 @@ vim.keymap.set('v', '<leader>sw', '<esc><cmd>lua require("spectre").open_visual(
 vim.keymap.set('n', '<leader>sp', '<cmd>lua require("spectre").open_file_search({select_word=true})<CR>', {
     desc = "Search on current file"
 })
-
--- Copilot
-vim.keymap.set('i', '<C-l>', '<Plug>(copilot-accept-line)')
-vim.keymap.set('i', '<C-w>', '<Plug>(copilot-accept-word)')
-vim.keymap.set('i', '<C-p>', '<Plug>(copilot-previous)')
-vim.keymap.set('i', '<C-n>', '<Plug>(copilot-next)')
-vim.keymap.set('i', '<C-c>', '<Plug>(copilot-suggest)')
-
-vim.keymap.set('n', '<leader>gc', ':CopilotChat<CR>', { silent = true })
-vim.keymap.set('v', '<leader>gc', 'y<ESC>:CopilotChat <c-r>0<CR>', { silent = true })
