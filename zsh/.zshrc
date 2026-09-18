@@ -38,6 +38,24 @@ path=(
 export EDITOR=/opt/homebrew/bin/nvim
 alias vim=/opt/homebrew/bin/nvim
 
+# --- fzf ---
+# Ctrl-R fuzzy history, Ctrl-T file picker, Alt-C cd. `fzf --zsh` emits both
+# the keybindings and the completions, replacing the older shell/*.zsh sources.
+if command -v fzf >/dev/null 2>&1; then
+  source <(fzf --zsh)
+
+  # fd respects .gitignore and skips .git, unlike find.
+  if command -v fd >/dev/null 2>&1; then
+    export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
+    export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+    export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
+  fi
+
+  export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border --info=inline'
+  # Show full multi-line commands when searching history.
+  export FZF_CTRL_R_OPTS='--preview "echo {}" --preview-window=down:3:hidden:wrap --bind "?:toggle-preview"'
+fi
+
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 # Secrets and company-specific config. Not in git.

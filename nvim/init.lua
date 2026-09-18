@@ -45,6 +45,16 @@ require("pckr").add{
   };
   { "terrortylor/nvim-comment" };
   { "saghen/blink.cmp", tag = "v1.*" };
+  -- Pinned to master: the default `main` branch is the in-progress rewrite,
+  -- which drops the .setup() API and the textobjects integration.
+  { "nvim-treesitter/nvim-treesitter",
+    branch = "master",
+    run = ":TSUpdate",
+    requires = {
+      { "nvim-treesitter/nvim-treesitter-textobjects", branch = "master" },
+    },
+  };
+  { "stevearc/conform.nvim" };
 
   "lewis6991/gitsigns.nvim";
   { "nvim-pack/nvim-spectre",
@@ -87,7 +97,8 @@ require("pckr").add{
   };
   { "nvim-telescope/telescope.nvim",
     requires = {
-      "nvim-lua/plenary.nvim"
+      "nvim-lua/plenary.nvim",
+      { "nvim-telescope/telescope-fzf-native.nvim", run = "make" },
     }
   };
   { "ruifm/gitlinker.nvim",
@@ -137,8 +148,13 @@ require("telescope").setup {
     colorscheme = {
       enable_preview = true
     }
-  }
+  },
+  extensions = {
+    fzf = {},
+  },
 }
+-- Compiled C sorter; much faster than the default Lua one on large repos.
+pcall(require("telescope").load_extension, "fzf")
 
 require("neo-tree").setup({
   filesystem = {
@@ -169,6 +185,44 @@ vim.cmd("highlight GitSignsCurrentLineBlame guifg=#555555")
 -- # syntax + language support #
 -- #############################
 require("nvim_comment").setup({ line_mapping = "<leader>cl", operator_mapping = "<leader>c" })
+
+-- ##############
+-- # treesitter #
+-- ##############
+require("nvim-treesitter.configs").setup({
+  ensure_installed = {
+    "ruby", "embedded_template", "slim", "sql",
+    "go", "gomod",
+    "lua", "vim", "vimdoc",
+    "javascript", "json", "yaml", "html", "css",
+    "bash", "markdown", "markdown_inline", "diff", "git_rebase", "gitcommit",
+  },
+  auto_install = false,
+  highlight = { enable = true },
+  indent = { enable = true },
+  textobjects = {
+    select = {
+      enable = true,
+      lookahead = true,
+      keymaps = {
+        ["af"] = "@function.outer",  -- a method, including def/end
+        ["if"] = "@function.inner",
+        ["ac"] = "@class.outer",     -- a class/module
+        ["ic"] = "@class.inner",
+        ["ab"] = "@block.outer",     -- a do/end or {} block
+        ["ib"] = "@block.inner",
+        ["aa"] = "@parameter.outer",
+        ["ia"] = "@parameter.inner",
+      },
+    },
+    move = {
+      enable = true,
+      set_jumps = true,
+      goto_next_start = { ["]m"] = "@function.outer", ["]]"] = "@class.outer" },
+      goto_previous_start = { ["[m"] = "@function.outer", ["[["] = "@class.outer" },
+    },
+  },
+})
 
 -- ##############
 -- # completion #
@@ -253,17 +307,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
         callback = vim.lsp.buf.clear_references,
       })
     end
-
-    -- Format on save, replacing coc.preferences.formatOnSave.
-    if client and client:supports_method("textDocument/formatting") then
-      vim.api.nvim_create_autocmd("BufWritePre", {
-        buffer = event.buf,
-        group = vim.api.nvim_create_augroup("UserLspFormat" .. event.buf, { clear = true }),
-        callback = function()
-          vim.lsp.buf.format({ bufnr = event.buf, id = client.id, timeout_ms = 2000 })
-        end,
-      })
-    end
   end,
 })
 
@@ -274,6 +317,48 @@ vim.diagnostic.config({
   severity_sort = true,
   float = { source = true },
 })
+
+-- ##############
+-- # formatting #
+-- ##############
+-- conform owns format-on-save for every filetype. Ruby has no entry, so it
+-- falls back to the LSP (ruby-lsp -> the project's rubocop); the rest use a
+-- dedicated formatter when one is on PATH.
+require("conform").setup({
+  formatters_by_ft = {
+    javascript = { "prettier" },
+    typescript = { "prettier" },
+    json = { "prettier" },
+    jsonc = { "prettier" },
+    yaml = { "prettier" },
+    css = { "prettier" },
+    scss = { "prettier" },
+    html = { "prettier" },
+    markdown = { "prettier" },
+    go = { "gofmt" },
+    lua = { "stylua" },
+    sh = { "shfmt" },
+    zsh = { "shfmt" },
+  },
+  format_on_save = function(bufnr)
+    -- Let :noa w skip formatting when you need the file written verbatim.
+    if vim.b[bufnr].disable_autoformat or vim.g.disable_autoformat then
+      return
+    end
+    return { timeout_ms = 2000, lsp_format = "fallback" }
+  end,
+})
+
+-- :Format to run it by hand, e.g. on a file you saved with formatting off.
+vim.api.nvim_create_user_command("Format", function()
+  require("conform").format({ async = true, lsp_format = "fallback" })
+end, { desc = "Format current buffer" })
+
+-- :FormatToggle to suspend format-on-save for this buffer.
+vim.api.nvim_create_user_command("FormatToggle", function()
+  vim.b.disable_autoformat = not vim.b.disable_autoformat
+  print("format on save: " .. (vim.b.disable_autoformat and "off" or "on") .. " (buffer)")
+end, { desc = "Toggle format on save for this buffer" })
 
 -- Spectre
 vim.keymap.set('n', '<leader>S', '<cmd>lua require("spectre").toggle()<CR>', {

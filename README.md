@@ -83,6 +83,35 @@ ASDF_RUBY_VERSION=<version> gem install ruby-lsp && asdf reshim ruby
 Symptom of a missing one: `ruby_lsp` exits with code 126 and the log shows
 "No version is set for command ruby-lsp". Check with `:checkhealth vim.lsp`.
 
+Treesitter is pinned to the `master` branch: the default `main` is the
+in-progress rewrite, which drops `.setup()` and the textobjects integration.
+Run `:TSUpdate` once on a new machine to compile the parsers.
+
+`conform.nvim` owns format-on-save for all filetypes. Ruby has no entry, so it
+falls through to `ruby-lsp` and the project's own RuboCop; other filetypes use
+prettier/gofmt/stylua/shfmt when present. `:Format` runs it manually and
+`:FormatToggle` suspends it for the current buffer.
+
+## Git config
+
+`~/.gitconfig` isn't tracked (it holds identity), so these aren't applied by
+`install.sh`. Worth setting on a new machine:
+
+```sh
+git config --global rerere.enabled true       # replay conflict resolutions
+git config --global rerere.autoUpdate true
+git config --global rebase.autostash true     # stash/pop around a rebase
+git config --global merge.conflictstyle zdiff3  # show common ancestor
+git config --global fetch.prune true          # drop refs deleted on remote
+git config --global diff.colorMoved zebra     # distinguish moved from changed
+git config --global diff.algorithm histogram
+git config --global push.followTags true
+git config --global branch.sort -committerdate  # recent branches first
+```
+
+`rerere` matters most here: with `pull.rebase = true`, long-lived branches hit
+the same conflicts repeatedly, and this replays the resolution.
+
 ## What's deliberately not here
 
 This repo is public, so these stay local and need recreating by hand:
