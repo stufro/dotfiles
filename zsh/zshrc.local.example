@@ -1,0 +1,28 @@
+# Template for ~/.zshrc.local — copy, then add whatever this machine needs.
+#
+#   cp ~/.config/zsh/zshrc.local.example ~/.zshrc.local
+#   chmod 600 ~/.zshrc.local
+#
+# This file is NEVER committed. ~/.config is a public repo, so anything
+# secret or work-specific lives only in ~/.zshrc.local:
+#   - API keys and database passwords
+#   - employer-specific env vars
+#   - host-specific paths
+#
+# Sourced from the end of zsh/.zshrc.
+
+# --- docker / colima ---
+# Static socket path rather than `docker context inspect | jq`, which would cost
+# two subprocesses on every shell start. The -S test means a stopped colima
+# leaves DOCKER_HOST unset instead of pointing at a dead socket.
+if [[ -z $DOCKER_HOST ]] && [[ -S "$HOME/.colima/default/docker.sock" ]]; then
+  export DOCKER_HOST="unix://$HOME/.colima/default/docker.sock"
+fi
+
+# --- ruby ---
+# Uncomment only if a Ruby build fails on openssl. Off by default because the
+# command substitution runs on every shell start.
+# export RUBY_CONFIGURE_OPTS="--with-openssl-dir=$(brew --prefix openssl)"
+
+# --- work / secrets ---
+# Add employer env vars and credentials below. Nothing here belongs in git.

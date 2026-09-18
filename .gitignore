@@ -7,3 +7,16 @@ exercism/user.json
 gh/*
 github-copilot/
 1Password/
+
+# machine-local secrets / company config — never commit
+.zshrc.local
+zsh/.zshrc.local
+*.bak
+
+# shell history, in case it ever lands here
+.zsh_history
+.*_history
+
+# zsh completion cache (machine-specific, hostname in filename)
+.zcompdump*
+zsh/.zcompdump*
