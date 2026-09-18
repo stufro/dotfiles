@@ -257,31 +257,54 @@ require("nvim_comment").setup({ line_mapping = "<leader>cl", operator_mapping = 
 -- ##############
 -- # treesitter #
 -- ##############
--- nvim-treesitter's master branch is in maintenance mode and ships queries
--- written against an older treesitter API. Because its runtimepath entry wins
--- over $VIMRUNTIME, those queries shadow Neovim's own for any language both
--- provide. The markdown one uses a #set-lang-from-info-string! directive whose
--- implementation is incompatible with 0.12, so every markdown file with a
--- fenced code block throws "attempt to call method 'range' (a nil value)" --
--- including in Telescope's preview window.
+-- nvim-treesitter's master branch is in maintenance mode and its queries
+-- target an older treesitter API. Two problems follow, both surfacing as
+-- "attempt to call method 'range' (a nil value)" from the highlighter.
 --
--- Drop the plugin's copies for the languages Neovim bundles, so its own
--- (correct) queries are used instead.
+-- 1. Its runtimepath entry wins over $VIMRUNTIME, so for any language both
+--    provide, its queries shadow Neovim's correct ones.
+-- 2. Its injection queries derive a language dynamically via #downcase! and
+--    #set-lang-from-info-string!, directives whose implementations no longer
+--    work here. That breaks markdown fenced code blocks, and every bash or
+--    ruby heredoc (<<~SQL, <<'DONE').
+--
+-- Delete the shadowing copies, and strip just the offending directive lines
+-- from the rest. Losing them means a heredoc body is highlighted as plain
+-- text instead of as its named language -- the syntax around it is unaffected.
 do
-  local plugin_queries = vim.fn.stdpath("data")
+  local queries = vim.fn.stdpath("data")
     .. "/site/pack/pckr/opt/nvim-treesitter/queries/"
+
+  -- Languages Neovim bundles its own queries for: drop the plugin's entirely.
   for _, lang in ipairs({ "markdown", "markdown_inline", "lua", "vim", "vimdoc", "c", "query" }) do
-    local dir = plugin_queries .. lang
+    local dir = queries .. lang
     if vim.uv.fs_stat(dir) then
       vim.fn.delete(dir, "rf")
     end
   end
-end
 
--- Parsers are fetched with `git clone` rather than a curl tarball from
--- codeload.github.com, which this network blocks (curl reports "could not
--- resolve host" even though DNS resolves it and git over HTTPS works).
-require("nvim-treesitter.install").prefer_git = true
+  -- Languages only the plugin provides: drop whole patterns that use a broken
+  -- directive. Removing just the directive line would leave the surrounding
+  -- S-expression unbalanced, so the query would stop compiling entirely.
+  for _, lang in ipairs({ "bash", "ruby", "hcl", "hurl", "php_only" }) do
+    local file = queries .. lang .. "/injections.scm"
+    if vim.uv.fs_stat(file) then
+      local text = table.concat(vim.fn.readfile(file), "\n")
+      -- Patterns are separated by blank lines; keep those without a directive.
+      local kept, changed = {}, false
+      for block in (text .. "\n\n"):gmatch("(.-)\n\n") do
+        if block:match("#downcase!") or block:match("#set%-lang%-from%-info%-string!") then
+          changed = true
+        elseif block:match("%S") then
+          table.insert(kept, block)
+        end
+      end
+      if changed then
+        vim.fn.writefile(vim.split(table.concat(kept, "\n\n") .. "\n", "\n"), file)
+      end
+    end
+  end
+end
 
 require("nvim-treesitter.configs").setup({
   -- Deliberately excludes the parsers Neovim already bundles: c, lua, markdown,
