@@ -139,8 +139,13 @@ local function apply_syntax_overrides()
   set("@string.special.symbol", { fg = vscode.symbol })
   set("@symbol", { fg = vscode.symbol })
 
-  -- Definition and control-flow keywords -> purple.
+  -- Structural and control-flow keywords -> purple. This includes bare
+  -- @keyword, which in Ruby is `do`, `begin`, and the `end` closing a class,
+  -- module or block -- those get no more specific capture, so leaving
+  -- @keyword blue left them mismatched against the purple `end` of a def or
+  -- if (which do get a second, narrower capture).
   for _, group in ipairs({
+    "@keyword",
     "@keyword.function",
     "@keyword.type",
     "@keyword.return",
@@ -151,10 +156,8 @@ local function apply_syntax_overrides()
     set(group, { fg = vscode.purple })
   end
 
-  -- Plain @keyword stays blue: and/or/not/self are blue in VS Code, and `end`
-  -- is captured as both @keyword and @keyword.function, so the more specific
-  -- group above wins for it.
-  set("@keyword", { fg = vscode.blue })
+  -- Operator keywords stay blue, matching VS Code: `and`, `or`, `not`, `in`.
+  -- (`self` is @variable.builtin, not a keyword, so it is unaffected.)
   set("@keyword.operator", { fg = vscode.blue })
 end
 
