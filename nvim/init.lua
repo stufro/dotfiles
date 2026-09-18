@@ -183,7 +183,28 @@ vim.keymap.set("n", "<leader>f", telescope_builtin.find_files, {})
 vim.keymap.set("n", "<leader>F", telescope_builtin.live_grep, {})
 vim.keymap.set("v", '<leader>F', "y<ESC>:Telescope live_grep default_text=<c-r>0<CR>", {}) -- search selection
 vim.keymap.set("n", "<leader>.", telescope_builtin.buffers, {})
+local telescope_actions = require("telescope.actions")
+
 require("telescope").setup {
+  defaults = {
+    -- Telescope records every prompt to ~/.local/share/nvim/telescope_history
+    -- by default, but binds nothing to read it back. Arrow keys cycle through
+    -- it; <C-n>/<C-p> still move the selection, so nothing is lost.
+    history = {
+      path = vim.fn.stdpath("data") .. "/telescope_history",
+      limit = 200,
+    },
+    mappings = {
+      i = {
+        ["<Up>"] = telescope_actions.cycle_history_prev,
+        ["<Down>"] = telescope_actions.cycle_history_next,
+      },
+      n = {
+        ["<Up>"] = telescope_actions.cycle_history_prev,
+        ["<Down>"] = telescope_actions.cycle_history_next,
+      },
+    },
+  },
   pickers = {
     buffers = {
       sort_mru = true,
