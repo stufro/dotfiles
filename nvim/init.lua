@@ -121,6 +121,50 @@ require("vscode_modern").setup {
 }
 vim.cmd.colorscheme("vscode_modern")
 
+-- The theme predates these treesitter groups, so they fall back to defaults
+-- that don't match VS Code: symbols inherit @string (orange) instead of the
+-- constant blue, and def/class/end land on @keyword (blue) rather than the
+-- control-flow purple. Colours below are the theme's own palette values.
+local vscode = {
+  purple = "#C586C0", -- keyword_control_flow: def, end, class, if, return
+  blue = "#569CD6", -- keyword: and, or, not, self
+  symbol = "#4FC1FF", -- constant: :a_symbol
+}
+
+local function apply_syntax_overrides()
+  local set = function(group, opts) vim.api.nvim_set_hl(0, group, opts) end
+
+  -- Ruby symbols. Treesitter captures these as @string.special.symbol, which
+  -- inherits from @string; VS Code shows them in the constant blue.
+  set("@string.special.symbol", { fg = vscode.symbol })
+  set("@symbol", { fg = vscode.symbol })
+
+  -- Definition and control-flow keywords -> purple.
+  for _, group in ipairs({
+    "@keyword.function",
+    "@keyword.type",
+    "@keyword.return",
+    "@keyword.conditional",
+    "@keyword.repeat",
+    "@keyword.exception",
+  }) do
+    set(group, { fg = vscode.purple })
+  end
+
+  -- Plain @keyword stays blue: and/or/not/self are blue in VS Code, and `end`
+  -- is captured as both @keyword and @keyword.function, so the more specific
+  -- group above wins for it.
+  set("@keyword", { fg = vscode.blue })
+  set("@keyword.operator", { fg = vscode.blue })
+end
+
+apply_syntax_overrides()
+-- Re-apply if the colorscheme is reloaded, which resets all highlight groups.
+vim.api.nvim_create_autocmd("ColorScheme", {
+  group = vim.api.nvim_create_augroup("UserSyntaxOverrides", {}),
+  callback = apply_syntax_overrides,
+})
+
 vim.cmd("set number")
 vim.cmd("set nowrap")
 
@@ -189,6 +233,11 @@ require("nvim_comment").setup({ line_mapping = "<leader>cl", operator_mapping = 
 -- ##############
 -- # treesitter #
 -- ##############
+-- Parsers are fetched with `git clone` rather than a curl tarball from
+-- codeload.github.com, which this network blocks (curl reports "could not
+-- resolve host" even though DNS resolves it and git over HTTPS works).
+require("nvim-treesitter.install").prefer_git = true
+
 require("nvim-treesitter.configs").setup({
   ensure_installed = {
     "ruby", "embedded_template", "slim", "sql",
