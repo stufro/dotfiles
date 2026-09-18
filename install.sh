@@ -114,7 +114,23 @@ else
   warn "asdf not on PATH; skipping runtimes. Re-run this script from a new shell."
 fi
 
-# --- 7. machine-local secrets ---
+# --- 7. ruby-lsp, per asdf Ruby ---
+# ruby-lsp loads each project's own gems to index them, so it must run under
+# the Ruby that project pins -- one install per version, not one globally.
+if command -v asdf >/dev/null 2>&1; then
+  for version in $(asdf list ruby 2>/dev/null | tr -d ' *'); do
+    if [[ -x "$HOME/.asdf/installs/ruby/$version/bin/ruby-lsp" ]]; then
+      skip "ruby-lsp for ruby $version"
+    else
+      info "installing ruby-lsp for ruby $version"
+      ASDF_RUBY_VERSION="$version" gem install ruby-lsp --no-document || \
+        warn "ruby-lsp failed for ruby $version; continuing"
+    fi
+  done
+  asdf reshim ruby 2>/dev/null || true
+fi
+
+# --- 8. machine-local secrets ---
 if [[ -f "$HOME/.zshrc.local" ]]; then
   skip "~/.zshrc.local present"
 else

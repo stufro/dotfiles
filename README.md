@@ -65,6 +65,24 @@ happens to be inherited from the shell that started the server. Keeping
 everything in `.zshrc` — which every interactive shell reads — avoids that whole
 class of problem.
 
+## Neovim LSP
+
+Uses Neovim's built-in LSP client (`vim.lsp.config` / `vim.lsp.enable`) with
+`blink.cmp` for completion. Servers are declared directly in `nvim/init.lua` --
+Neovim ships the API but no server definitions, so there's no `nvim-lspconfig`.
+
+`ruby-lsp` must be installed **once per asdf Ruby version**, because it loads a
+project's own gems to index them and so has to run under the Ruby that project
+pins. `install.sh` does this for every installed version; after adding a new
+Ruby:
+
+```sh
+ASDF_RUBY_VERSION=<version> gem install ruby-lsp && asdf reshim ruby
+```
+
+Symptom of a missing one: `ruby_lsp` exits with code 126 and the log shows
+"No version is set for command ruby-lsp". Check with `:checkhealth vim.lsp`.
+
 ## What's deliberately not here
 
 This repo is public, so these stay local and need recreating by hand:

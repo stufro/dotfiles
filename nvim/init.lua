@@ -45,7 +45,7 @@ require("pckr").add{
     end
   };
   { "terrortylor/nvim-comment" };
-  { "neoclide/coc.nvim", branch = "release" };
+  { "saghen/blink.cmp", tag = "v1.*" };
 
   "lewis6991/gitsigns.nvim";
   { "nvim-pack/nvim-spectre",
@@ -181,28 +181,110 @@ vim.cmd("highlight GitSignsCurrentLineBlame guifg=#555555")
 -- #############################
 require("nvim_comment").setup({ line_mapping = "<leader>cl", operator_mapping = "<leader>c" })
 
--- CoC
-local opts = {silent = true, noremap = true, expr = true, replace_keycodes = false}
-vim.keymap.set("i", "<TAB>", 'coc#pum#visible() ? coc#pum#next(1) : "<TAB>"', opts)
-vim.keymap.set("i", "<S-TAB>", [[coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"]], opts)
-vim.keymap.set("i", "<cr>", [[coc#pum#visible() ? coc#pum#confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"]], opts)
-
--- CoC - Jump to
-vim.keymap.set("n", "gd", "<Plug>(coc-definition)", {silent = true})
-vim.keymap.set("n", "gy", "<Plug>(coc-type-definition)", {silent = true})
-vim.keymap.set("n", "gi", "<Plug>(coc-implementation)", {silent = true})
-vim.keymap.set("n", "gr", "<Plug>(coc-references)", {silent = true})
-
--- CoC - Highlight the symbol and its references on a CursorHold event(cursor is idle)
-vim.api.nvim_create_augroup("CocGroup", {})
-vim.api.nvim_create_autocmd("CursorHold", {
-  group = "CocGroup",
-  command = "silent call CocActionAsync('highlight')",
-  desc = "Highlight symbol under cursor on CursorHold"
+-- ##############
+-- # completion #
+-- ##############
+-- blink.cmp drives the popup. TAB/S-TAB cycle, CR accepts -- matching the
+-- keys coc used, so muscle memory carries over.
+require("blink.cmp").setup({
+  keymap = {
+    preset = "none",
+    ["<Tab>"] = { "select_next", "fallback" },
+    ["<S-Tab>"] = { "select_prev", "fallback" },
+    ["<CR>"] = { "accept", "fallback" },
+    ["<C-Space>"] = { "show" },
+    ["<C-e>"] = { "hide" },
+  },
+  completion = {
+    documentation = { auto_show = true },
+    list = { selection = { preselect = false, auto_insert = false } },
+  },
+  signature = { enabled = true },
 })
 
--- CoC - Refactoring
-vim.keymap.set("n", "<Leader>d", ":CocCommand document.renameCurrentWord<CR>", { silent = true })
+-- #######
+-- # LSP #
+-- #######
+-- Neovim ships the vim.lsp.config API but no server definitions, so each
+-- server is declared here rather than via nvim-lspconfig.
+vim.lsp.config("ruby_lsp", {
+  -- The asdf shim, so ruby-lsp runs under whichever Ruby the project pins.
+  -- It must load the project's own gems to index them, so it has to match.
+  -- Requires `gem install ruby-lsp` per Ruby version -- see README.
+  cmd = { "ruby-lsp" },
+  filetypes = { "ruby", "eruby" },
+  root_markers = { "Gemfile", ".git" },
+  init_options = {
+    -- Formatting and diagnostics come from the project's own rubocop.
+    formatter = "auto",
+    linters = { "rubocop" },
+  },
+})
+
+vim.lsp.config("gopls", {
+  cmd = { "gopls" },
+  filetypes = { "go", "gomod", "gowork", "gotmpl" },
+  root_markers = { "go.work", "go.mod", ".git" },
+  settings = {
+    gopls = { usePlaceholders = true },
+  },
+})
+
+vim.lsp.enable({ "ruby_lsp", "gopls" })
+
+-- Buffer-local mappings, set only once a server attaches.
+vim.api.nvim_create_autocmd("LspAttach", {
+  group = vim.api.nvim_create_augroup("UserLspAttach", {}),
+  callback = function(event)
+    local function map(mode, lhs, rhs, desc)
+      vim.keymap.set(mode, lhs, rhs, { buffer = event.buf, silent = true, desc = desc })
+    end
+
+    map("n", "gd", vim.lsp.buf.definition, "Go to definition")
+    map("n", "gy", vim.lsp.buf.type_definition, "Go to type definition")
+    map("n", "gi", vim.lsp.buf.implementation, "Go to implementation")
+    map("n", "gr", vim.lsp.buf.references, "List references")
+    map("n", "K", vim.lsp.buf.hover, "Hover docs")
+    map("n", "<Leader>d", vim.lsp.buf.rename, "Rename symbol")
+    map("n", "<Leader>a", vim.lsp.buf.code_action, "Code action")
+
+    local client = vim.lsp.get_client_by_id(event.data.client_id)
+
+    -- Highlight the symbol under the cursor while idle.
+    if client and client:supports_method("textDocument/documentHighlight") then
+      local highlight_group = vim.api.nvim_create_augroup("UserLspHighlight", { clear = false })
+      vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
+        buffer = event.buf,
+        group = highlight_group,
+        callback = vim.lsp.buf.document_highlight,
+      })
+      vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
+        buffer = event.buf,
+        group = highlight_group,
+        callback = vim.lsp.buf.clear_references,
+      })
+    end
+
+    -- Format on save, replacing coc.preferences.formatOnSave.
+    if client and client:supports_method("textDocument/formatting") then
+      vim.api.nvim_create_autocmd("BufWritePre", {
+        buffer = event.buf,
+        group = vim.api.nvim_create_augroup("UserLspFormat" .. event.buf, { clear = true }),
+        callback = function()
+          vim.lsp.buf.format({ bufnr = event.buf, id = client.id, timeout_ms = 2000 })
+        end,
+      })
+    end
+  end,
+})
+
+-- Show the diagnostic for the current line in a float, as coc's
+-- diagnostic.checkCurrentLine did.
+vim.diagnostic.config({
+  virtual_text = true,
+  severity_sort = true,
+  float = { source = true },
+})
 
 -- Spectre
 vim.keymap.set('n', '<leader>S', '<cmd>lua require("spectre").toggle()<CR>', {
