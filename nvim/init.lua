@@ -233,18 +233,44 @@ require("nvim_comment").setup({ line_mapping = "<leader>cl", operator_mapping = 
 -- ##############
 -- # treesitter #
 -- ##############
+-- nvim-treesitter's master branch is in maintenance mode and ships queries
+-- written against an older treesitter API. Because its runtimepath entry wins
+-- over $VIMRUNTIME, those queries shadow Neovim's own for any language both
+-- provide. The markdown one uses a #set-lang-from-info-string! directive whose
+-- implementation is incompatible with 0.12, so every markdown file with a
+-- fenced code block throws "attempt to call method 'range' (a nil value)" --
+-- including in Telescope's preview window.
+--
+-- Drop the plugin's copies for the languages Neovim bundles, so its own
+-- (correct) queries are used instead.
+do
+  local plugin_queries = vim.fn.stdpath("data")
+    .. "/site/pack/pckr/opt/nvim-treesitter/queries/"
+  for _, lang in ipairs({ "markdown", "markdown_inline", "lua", "vim", "vimdoc", "c", "query" }) do
+    local dir = plugin_queries .. lang
+    if vim.uv.fs_stat(dir) then
+      vim.fn.delete(dir, "rf")
+    end
+  end
+end
+
 -- Parsers are fetched with `git clone` rather than a curl tarball from
 -- codeload.github.com, which this network blocks (curl reports "could not
 -- resolve host" even though DNS resolves it and git over HTTPS works).
 require("nvim-treesitter.install").prefer_git = true
 
 require("nvim-treesitter.configs").setup({
+  -- Deliberately excludes the parsers Neovim already bundles: c, lua, markdown,
+  -- markdown_inline, query, vim, vimdoc. nvim-treesitter's master branch ships
+  -- injection queries written against an older treesitter API, and because its
+  -- runtimepath entry wins over $VIMRUNTIME, those queries shadow Neovim's own
+  -- and break any markdown file containing a fenced code block with
+  -- "attempt to call method 'range' (a nil value)".
   ensure_installed = {
     "ruby", "embedded_template", "slim", "sql",
     "go", "gomod",
-    "lua", "vim", "vimdoc",
     "javascript", "json", "yaml", "html", "css",
-    "bash", "markdown", "markdown_inline", "diff", "git_rebase", "gitcommit",
+    "bash", "diff", "git_rebase", "gitcommit",
   },
   auto_install = false,
   highlight = { enable = true },
