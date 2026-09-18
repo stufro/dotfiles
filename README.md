@@ -94,23 +94,12 @@ prettier/gofmt/stylua/shfmt when present. `:Format` runs it manually and
 
 ## Git config
 
-`~/.gitconfig` isn't tracked (it holds identity), so these aren't applied by
-`install.sh`. Worth setting on a new machine:
+Generic settings live in `git/config`, which git reads natively from
+`~/.config/git/config` -- no symlink needed. Identity and the `gh` credential
+helpers stay in untracked `~/.gitconfig`; git merges both.
 
-```sh
-git config --global rerere.enabled true       # replay conflict resolutions
-git config --global rerere.autoUpdate true
-git config --global rebase.autostash true     # stash/pop around a rebase
-git config --global merge.conflictstyle zdiff3  # show common ancestor
-git config --global fetch.prune true          # drop refs deleted on remote
-git config --global diff.colorMoved zebra     # distinguish moved from changed
-git config --global diff.algorithm histogram
-git config --global push.followTags true
-git config --global branch.sort -committerdate  # recent branches first
-```
-
-`rerere` matters most here: with `pull.rebase = true`, long-lived branches hit
-the same conflicts repeatedly, and this replays the resolution.
+`rerere` is the one worth knowing about: with `pull.rebase = true`, long-lived
+branches hit the same conflicts repeatedly, and it replays your resolution.
 
 ## What's deliberately not here
 

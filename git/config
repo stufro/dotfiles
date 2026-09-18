@@ -1,0 +1,43 @@
+# Generic git behaviour. Read natively from ~/.config/git/config, so no
+# symlink is needed. Identity, credential helpers and anything
+# company-specific stay in ~/.gitconfig, which is not tracked -- git merges
+# both, with ~/.gitconfig taking precedence.
+
+[pull]
+	# Rebase local commits on top of the fetched branch instead of merging.
+	rebase = true
+
+[push]
+	# First push of a new branch sets its upstream automatically.
+	autoSetupRemote = true
+	# Push annotated tags reachable from the pushed commits.
+	followTags = true
+
+[rerere]
+	# Record how a conflict was resolved and replay it when the same conflict
+	# reappears -- worth a lot when rebasing long-lived branches.
+	enabled = true
+	autoUpdate = true
+
+[rebase]
+	# Stash a dirty tree before rebasing and restore it after, rather than
+	# refusing to start.
+	autostash = true
+
+[merge]
+	# Conflict markers include the common ancestor, not just the two sides.
+	conflictstyle = zdiff3
+
+[fetch]
+	# Delete local refs whose remote branch is gone.
+	prune = true
+
+[diff]
+	# Colour moved lines differently from genuine additions/removals.
+	colorMoved = zebra
+	# Produces more readable diffs than the default Myers algorithm.
+	algorithm = histogram
+
+[branch]
+	# `git branch` lists most recently committed first.
+	sort = -committerdate
