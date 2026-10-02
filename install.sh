@@ -119,11 +119,14 @@ fi
 # the Ruby that project pins -- one install per version, not one globally.
 if command -v asdf >/dev/null 2>&1; then
   for version in $(asdf list ruby 2>/dev/null | tr -d ' *'); do
-    if [[ -x "$HOME/.asdf/installs/ruby/$version/bin/ruby-lsp" ]]; then
+    bin="$HOME/.asdf/installs/ruby/$version/bin"
+    if [[ -x "$bin/ruby-lsp" ]]; then
       skip "ruby-lsp for ruby $version"
     else
       info "installing ruby-lsp for ruby $version"
-      ASDF_RUBY_VERSION="$version" gem install ruby-lsp --no-document || \
+      # Call this version's gem directly: on a first run the asdf shims aren't
+      # on PATH yet, so a bare `gem` would be macOS's system Ruby.
+      "$bin/gem" install ruby-lsp --no-document || \
         warn "ruby-lsp failed for ruby $version; continuing"
     fi
   done
