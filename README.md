@@ -121,9 +121,11 @@ This repo is public, so these stay local and need recreating by hand:
 - **`~/.ssh/`** — keys and `config`. Copy out-of-band (the host config references
   internal infrastructure). Note it `Include`s `~/.colima/ssh_config`, which
   colima generates.
-- **iTerm2** — settings live in `~/Library/Application Support/iTerm2`, symlinked
-  here as `iterm2/AppSupport`. Import `Tmux iTerm Profile.json` as a profile, and
-  `iTerm2 State Settings.itermexport` for window state.
+- **iTerm2** — `install.sh` points iTerm2 at `iterm2/com.googlecode.iterm2.plist`
+  (profiles, keys, appearance). In Settings → General → Settings, set "Save
+  changes" to Automatically so UI edits land back in the repo; that choice is
+  per-machine. App support data (saved state, scripts) is symlinked here as
+  `iterm2/AppSupport` but not managed.
 
 ## Regenerating the Brewfile
 

@@ -91,6 +91,17 @@ mkdir -p "$HOME/.claude"
 link "$CONFIG_DIR/claude/CLAUDE.md"     "$HOME/.claude/CLAUDE.md"
 link "$CONFIG_DIR/claude/settings.json" "$HOME/.claude/settings.json"
 
+# iTerm2 can't follow a symlinked plist, but it can load (and save) its whole
+# settings plist from a folder. Takes effect the next time iTerm2 launches.
+if [[ $(defaults read com.googlecode.iterm2 PrefsCustomFolder 2>/dev/null) == "$CONFIG_DIR/iterm2" ]] &&
+   [[ $(defaults read com.googlecode.iterm2 LoadPrefsFromCustomFolder 2>/dev/null) == 1 ]]; then
+  skip "iTerm2 loads settings from $CONFIG_DIR/iterm2"
+else
+  defaults write com.googlecode.iterm2 PrefsCustomFolder -string "$CONFIG_DIR/iterm2"
+  defaults write com.googlecode.iterm2 LoadPrefsFromCustomFolder -bool true
+  info "pointed iTerm2 settings at $CONFIG_DIR/iterm2 (restart iTerm2 if it's open)"
+fi
+
 # --- 5. tmux plugins ---
 clone https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
 if [[ -x "$HOME/.tmux/plugins/tpm/bin/install_plugins" ]]; then
@@ -151,7 +162,6 @@ Done. Remaining manual steps (deliberately not automated):
   2. Fill in ~/.zshrc.local       — credentials + work env vars, not in this repo
   3. Recreate ~/.gitconfig        — user.name/email, pull.rebase, gh credential helper
   4. Recreate ~/.ssh/config + keys — copy out-of-band, never via this repo
-  5. iTerm2: import the profile   — see README
-  6. Open a new shell, then run `nvim` to let pckr install plugins
+  5. Open a new shell, then run `nvim` to let pckr install plugins
 
 DONE
