@@ -1,0 +1,170 @@
+fly 
+fly --app chordly-db backup --help
+fly --app chordly-db machine clone
+fly --app chordly-db machine clone 3d8d313c640189 --region dfw
+fly --app chordly-db machine status
+fly --app chordly-db machine stop
+fly --app chordly-db postgres backup --help
+fly --app chordly-db postgres backup list
+fly apps
+fly apps chordly
+fly apps list
+fly deploy
+fly deploy --help
+fly deploy --no-cache
+fly image show -a chordly-db
+fly logs
+fly logs -a -200 chordly
+fly logs -a chordly
+fly machine clone
+fly machine clone 21781973f03e89 --region dfw
+fly machine console
+fly machine restart
+fly machine restart -a chordly\
+fly proxy 5433:5432 -a chordly-db
+fly proxy 5555:5432 -a chordly-d
+fly proxy 5555:5432 -a chordly-db
+fly proxy 5555:5432 -a chordly-db 
+fly proxy 5555:5432 -a chordly-db \
+fly proxy 5555:5432 -a chordly-dd
+fly scale
+fly scale count
+fly scale count 1 --region=lhr
+fly scale memory
+fly scale memory 1024
+fly scale memory 512
+fly scale memory 768
+fly scale show
+fly scale vm shared-cpu-1x\
+fly scale vm shared-cpu-2x\
+fly secrets
+fly secrets list
+fly secrets list -a chordly
+fly secrets show -a chordly
+fly secrets unset DATABASE_URL -a chordly
+fly sftp shell -a chordly
+fly sftp shell -a chordly <<< "put db/production.sqlite3 /data/production.sqlite3"
+fly ssh console --pty -C "/app/bin/rails console"
+fly ssh console --pty -C "/bin/bash"
+fly ssh console --pty -C "/rails/bin/rails console"
+fly ssh console --pty -C '/bin/bash'\
+fly ssh console -C "bin/rails c"
+fly ssh console -C "bin/rails db:migrate"
+fly ssh console -a chordly -C "bundle exec rails db:migrate"
+fly ssh console -a chordly -C "ls -lh /data/production.sqlite3"
+fly ssh console -a chordly -C "rm /data/production.sqlite3"
+fly ssh sftp get /data/production.sqlite3 ./production.sqlite3
+fly status
+fly volumes --help
+fly volumes create chordly_data --size 1 --region lhr
+fly volumes list
+fly volumes list -a chordly-db
+fly volumes snapshots
+fly volumes snapshots list
+fly volumes snapshots list vol_4o5mdn6pqlnd6oxv
+fly volumes snapshots list vol_gez1nvx8pewrmxl7
+kamal --help
+kamal app boot
+kamal app boot -r job --verbose\
+kamal app boot -r job\
+kamal app console
+kamal app containers
+kamal app containers --role job
+kamal app containers --roles job
+kamal app containers -r job
+kamal app details
+kamal app details -r job
+kamal app exec "bin/rails runner script/strip_alternate_cover_notes.rb"
+kamal app exec 'bundle exec ruby -e "require \"csv\"; puts CSV::VERSION"'
+kamal app exec --interactive --reuse "bin/rails runner \"puts SolidQueue::Job.where(finished_at: nil).group(:queue_name).count\""
+kamal app exec --reuse "bin/rails dbconsole"
+kamal app exec --reuse -i "bin/rails dbconsole --database=cache"
+kamal app exec --reuse -i "bin/rails dbconsole -c cache"
+kamal app exec --reuse -i "bin/rails dbconsole"
+kamal app exec -i --reuse -- bundle exec rake 'bookdeck:benchmark_recommendations[Stuart\ Frost]'
+kamal app exec -i --reuse -- bundle exec rake 'bookdeck:deduplicate_books'
+kamal app exec -i --reuse -- bundle exec rake 'bookdeck:entropy[Stuart Frost]'
+kamal app exec -i --reuse -- bundle exec rake 'bookdeck:entropy[Stuart\ Frost, 50]'
+kamal app exec -i --reuse -- bundle exec rake 'bookdeck:entropy[Stuart\ Frost,25]' >> tmp/inspect_recommendations_prod.txt
+kamal app exec -i --reuse -- bundle exec rake 'bookdeck:entropy[Stuart\ Frost,50]'
+kamal app exec -i --reuse -- bundle exec rake 'bookdeck:entropy[Stuart\ Frost,50]' >> tmp/entropy_prod.txt
+kamal app exec -i --reuse -- bundle exec rake 'bookdeck:entropy[Stuart\ Frost]'
+kamal app exec -i --reuse -- bundle exec rake 'bookdeck:entropy[Stuart\ Frst,25]' >> tmp/inspect_recommendations_prod.txt
+kamal app exec -i --reuse -- bundle exec rake 'bookdeck:inspect_recommendations[Stuart\ Frost,25]' >> tmp/inspect_recommendations_prod.txt
+kamal app exec -i --reuse -- bundle exec rake bookdeck:fix_categories
+kamal app exec -i --reuse -- bundle exec rake bookdeck:merge_features
+kamal app exec -i --reuse -- bundle exec rake bookdeck:normalize_authors
+kamal app exec -i --reuse -- bundle exec rake bookdeck:normalize_authors\
+kamal app exec -i --reuse -- bundle exec rake bookdeck:purge_author_slug_subjects
+kamal app exec -i --reuse -- bundle exec rake bookdeck:purge_noise_subjects
+kamal app exec -r job --reuse "bin/rails runner \"w = SolidQueue::Process.where(kind: 'Worker').last; puts [w.id, w.pid, w.last_heartbeat_at].inspect; puts\
+kamal app exec -r job --reuse "bin/rails runner \"w = SolidQueue::Process.where(kind: 'Worker').last; result = SolidQueue::ReadyExecution.claim(['critical','default'], 3, w.id); puts\
+kamal app exec -r job --reuse "ps aux"
+kamal app logs
+kamal app logs --help
+kamal app logs --roles job
+kamal app logs --roles job --help
+kamal app logs --roles job -f
+kamal app logs --roles job -f -g "EnrichSubjectsJob"
+kamal app logs --roles job -n 1000
+kamal app logs --roles job -n 1000 -g "EnrichSubjectsJob"
+kamal app logs --roles web
+kamal app logs --roles web --help
+kamal app logs --roles web -100f
+kamal app logs --roles web -f
+kamal app logs --roles web -g "GET \"/swipe\""
+kamal app logs --roles web -g '5aaf8e74-4ab8-4b5a-9971-be8d70559da6'
+kamal app logs --roles web -g 'Completed 404'
+kamal app logs --roles web -g 'Completed 500'
+kamal app logs --roles web -g 'Completed 500' -f
+kamal app logs --roles web -g 'GET "/swipe"'
+kamal app logs --roles web -g 'GET "/swipes"'
+kamal app logs --roles web -g 'POST "/swipes"'
+kamal app logs --roles web -g 'Started GET"/' -f
+kamal app logs --roles web -g 'Started GET' -f
+kamal app logs --roles web -g -f 'Completed 500'
+kamal app logs --roles web f
+kamal app logs -f
+kamal app logs -g "2da44048"
+kamal app logs -g "503"
+kamal app logs -g "CacheCoverJob book="
+kamal app logs -g "CacheCoverJob"
+kamal app logs -g "HTTP 503"
+kamal app logs -g "ed609e35"
+kamal app logs -g "image download"
+kamal app logs -r job --since 2m
+kamal app logs -r job --since 2m -f
+kamal app logs -r job -f
+kamal app logs -r job -f -g "CacheCoverJob"
+kamal app logs -r job -f -g "Quota"
+kamal app logs -r job -g "Quota"
+kamal app logs -r job -g "quota"
+kamal app logs -r job -g "unavailable"
+kamal app logs -r web
+kamal app logs -r web -f
+kamal app restart
+kamal app start
+kamal app stop
+kamal app stop -r job
+kamal build push --no-cache
+kamal console
+kamal console --reuse
+kamal dbconsole
+kamal deplo
+kamal deploy
+kamal deploy && colima stop
+kamal deploy --no-cache
+kamal deploy --skip-push
+kamal deploy --skip-push=false
+kamal help
+kamal lock help
+kamal lock release
+kamal proxy logs
+kamal proxy logs -f
+kamal proxy reboot
+kamal rollback
+kamal rollback --help
+kamal rollback 1a7c5afd9d1fcafe18f4229cb25f6ec6cbe82a7a
+kamal rollback 1d1dbb09db725d876266b93f6824d3acc26c3f9b
+kamal rollback 93ac9e83db9a
+kamal setup
