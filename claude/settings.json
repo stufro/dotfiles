@@ -4,5 +4,6 @@
     "ruby-lsp@claude-plugins-official": true
   },
   "alwaysThinkingEnabled": false,
-  "effortLevel": "high"
+  "effortLevel": "high",
+  "theme": "dark"
 }
