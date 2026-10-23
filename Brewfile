@@ -28,15 +28,12 @@ brew 'imagemagick'
 brew 'jq'
 brew 'k6'
 brew 'libpq'
-brew 'mariadb@10.6', restart_service: :changed
 brew 'neovim'
 brew 'ollama'
 brew 'openssl@1.1'
 brew 'overmind'
 brew 'pgloader'
-brew 'postgresql@14', restart_service: :changed
 brew 'python@3.12'
-brew 'redis', restart_service: :changed
 brew 'ripgrep'
 brew 'socat'
 brew 'telnet'
