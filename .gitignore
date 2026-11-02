@@ -20,3 +20,7 @@ zsh/.zshrc.local
 # zsh completion cache (machine-specific, hostname in filename)
 .zcompdump*
 zsh/.zcompdump*
+
+# iTerm2 machine-local support data and runtime sockets, not preferences.
+iterm2/AppSupport
+iterm2/sockets/

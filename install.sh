@@ -93,6 +93,8 @@ link "$CONFIG_DIR/claude/settings.json" "$HOME/.claude/settings.json"
 
 # iTerm2 can't follow a symlinked plist, but it can load (and save) its whole
 # settings plist from a folder. Takes effect the next time iTerm2 launches.
+# Brewfile installs the fonts used by the saved profiles; the plist enables
+# JetBrains Mono Nerd Font for non-ASCII glyphs, including Neovim file icons.
 if [[ $(defaults read com.googlecode.iterm2 PrefsCustomFolder 2>/dev/null) == "$CONFIG_DIR/iterm2" ]] &&
    [[ $(defaults read com.googlecode.iterm2 LoadPrefsFromCustomFolder 2>/dev/null) == 1 ]]; then
   skip "iTerm2 loads settings from $CONFIG_DIR/iterm2"
@@ -163,5 +165,6 @@ Done. Remaining manual steps (deliberately not automated):
   3. Recreate ~/.gitconfig        — user.name/email, pull.rebase, gh credential helper
   4. Recreate ~/.ssh/config + keys — copy out-of-band, never via this repo
   5. Open a new shell, then run `nvim` to let pckr install plugins
+  6. Fully quit and reopen iTerm2 to load the saved profiles and installed fonts
 
 DONE

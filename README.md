@@ -31,6 +31,21 @@ Afterwards:
 2. Fill in `~/.zshrc.local` (created from the template by `install.sh`).
 3. Open a new shell.
 4. Run `nvim` once to let pckr install plugins.
+5. Fully quit and reopen iTerm2 to load the saved profiles and installed fonts.
+
+### Terminal fonts and file icons
+
+`Brewfile` installs iTerm2, JetBrains Mono Nerd Font, and the Meslo font used by
+the Default profile. Both saved profiles enable **Use a different font for
+non-ASCII text** and select JetBrains Mono Nerd Font Mono for those glyphs.
+`install.sh` already points iTerm2 at these saved preferences, so the next setup
+doesn't need a manual font selection.
+
+Neovim's file explorer is Neo-tree; its icons come from `nvim-web-devicons`.
+Treesitter handles syntax parsing. If icons show as boxes, check iTerm2 →
+Settings → Profiles → Text on the active profile: the non-ASCII font should be
+**JetBrainsMono Nerd Font Mono**, with the separate non-ASCII font enabled.
+Profiles created separately need the same setting.
 
 ### If you're re-running this on a machine that was set up by hand
 
@@ -125,7 +140,10 @@ This repo is public, so these stay local and need recreating by hand:
   (profiles, keys, appearance). In Settings → General → Settings, set "Save
   changes" to Automatically so UI edits land back in the repo; that choice is
   per-machine. App support data (saved state, scripts) is symlinked here as
-  `iterm2/AppSupport` but not managed.
+  `iterm2/AppSupport` but not managed. That machine-specific symlink and
+  `iterm2/sockets/` are gitignored and stay local. Keep portable profile/font changes in the plist, and review other
+  preference changes before committing: iTerm2 also rewrites formatting and
+  version-specific settings.
 
 ## Regenerating the Brewfile
 
