@@ -7,7 +7,6 @@
 # then drop any entry not in `brew leaves` and delete the description comments
 # that `dump` adds.
 
-tap 'morantron/tmux-fingers'
 brew 'ansible'
 brew 'asdf'
 brew 'awscli'
@@ -37,6 +36,7 @@ brew 'python@3.12'
 brew 'ripgrep'
 brew 'socat'
 brew 'telnet'
+brew 'tmux-fingers'
 brew 'watch'
 brew 'yarn'
 cask 'antigravity-cli'
