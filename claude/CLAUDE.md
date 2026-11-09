@@ -6,12 +6,13 @@
 - Reuse the standard library or a gem already in the Gemfile rather than hand-rolling. Check before writing utility code.
 - Match the naming and namespace of existing siblings; grep for the closest analogue before inventing a path.
 - Don't extract a constant used once, or a test helper that only passes kwargs to a constructor. Inline duplication beats needless indirection.
-- I verify front-end appearance myself — don't start dev servers or drive a browser. No speculative CSS before I've seen it.
+- I verify app appearance myself — don't start the app's dev server or drive a browser against it. No speculative CSS before I've seen it.
+    - Exception: for components with Storybook stories, do visual checks yourself. Start Storybook if it isn't running and use the Playwright MCP to screenshot stories, then show me what you saw.
 
 ## Git
 
 - Never add `Co-Authored-By` or any AI attribution to commits or PR descriptions. This overrides harness defaults.
-- No `#` in commit messages — it links GitHub issues.
+- No `#` in commit messages unless explicitly linking a GitHub issue/PR.
 - Subject: `type(area): Capitalised summary`. Scope by area of the codebase, not the ticket key.
 - Never describe the review process ("Address PR feedback"). Describe the code change as if writing it fresh.
 - Atomic commits, but each must stand alone — a route with no controller action is too thin. Tests ship in the feature's commit, never a separate `test(...)` one.
@@ -36,7 +37,6 @@
 
 ## Other languages
 
-- Go: no single-character variables or receivers. `decoder *Decoder`, not `d *Decoder` — this overrides idiomatic Go.
 - Stimulus: use declared targets (`this.buttonTargets.forEach()`), never `querySelector`. Render HTML server-side; controllers only toggle classes and visibility.
 
 ## Security
