@@ -104,6 +104,22 @@ else
   info "pointed iTerm2 settings at $CONFIG_DIR/iterm2 (restart iTerm2 if it's open)"
 fi
 
+# iTerm2 leaves macOS/AppKit and updater settings out of the plist it saves, so
+# set them here instead. Holding a key repeats it rather than showing accents.
+defaults write com.googlecode.iterm2 ApplePressAndHoldEnabled -bool false
+defaults write com.googlecode.iterm2 AppleWindowTabbingMode -string manual
+defaults write com.googlecode.iterm2 AppleScrollAnimationEnabled -int 0
+defaults write com.googlecode.iterm2 NSScrollAnimationEnabled -bool false
+defaults write com.googlecode.iterm2 NSScrollViewShouldScrollUnderTitlebar -bool false
+defaults write com.googlecode.iterm2 NSOverlayScrollersFallBackForAccessoryViews -bool false
+defaults write com.googlecode.iterm2 AppleAntiAliasingThreshold -int 1
+defaults write com.googlecode.iterm2 AppleSmoothFixedFontsSizeThreshold -int 1
+defaults write com.googlecode.iterm2 NSAutoFillHeuristicControllerEnabled -bool false
+defaults write com.googlecode.iterm2 NSQuotedKeystrokeBinding -string ""
+defaults write com.googlecode.iterm2 NSRepeatCountBinding -string ""
+defaults write com.googlecode.iterm2 SUEnableAutomaticChecks -bool true
+skip "iTerm2 macOS settings applied"
+
 # --- 5. tmux plugins ---
 clone https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
 if [[ -x "$HOME/.tmux/plugins/tpm/bin/install_plugins" ]]; then
