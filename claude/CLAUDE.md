@@ -22,13 +22,13 @@
 - TDD: write the tests first. Generating a suite up front and reviewing it is not TDD — the value is in the sequence of decisions, not the artefacts.
 - Don't test stdlib or framework behaviour. A bare `Data.define` earns a test once it has custom logic.
 - Prefer behavioural tests over asserting markup exists — those only prove the template was edited.
-- Run a specific test by line: `bundle exec rails test test/file_test.rb:50`.
+- Run a specific test by line: `bundle exec rails test test/file_test.rb:50` (Minitest), `bundle exec rspec spec/file_spec.rb:50` (RSpec).
 - System tests: click `find("label[for='radio_id']")` when radio buttons are hidden by custom UI.
 
 ## Ruby/Rails
 
 - `rubocop -A` before committing. Fix new code to the current standard; never add a file to `.rubocop_todo.yml` to silence a cop.
-- Predicate methods (`rule.approve?`) over string comparison. Call them inline rather than assigning to a local. Use `assert_predicate` in tests.
+- Predicate methods (`rule.approve?`) over string comparison. Call them inline rather than assigning to a local. In tests, use `assert_predicate` (Minitest) or `be_<predicate>` matchers like `expect(rule).to be_approve` (RSpec).
 - Hash shorthand when key matches the variable: `{ company:, service: }`.
 - Keep `Money` as `Money`; `.to_f` only at the serialisation boundary.
 - Generate migrations with `rails g migration`, then edit. Keep data changes out of schema migrations.
