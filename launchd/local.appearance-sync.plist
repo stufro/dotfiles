@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  Runs scripts/appearance-changed with "light" or "dark" at login and whenever
+  macOS switches appearance, so the zsh prompt and tmux can follow it.
+
+  launchd doesn't expand ~ or $HOME itself, so sh does it here.
+-->
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>local.appearance-sync</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/sh</string>
+    <string>-c</string>
+    <string>exec /opt/homebrew/bin/dark-notify -c "$HOME/.config/scripts/appearance-changed"</string>
+  </array>
+  <key>RunAtLoad</key>
+  <true/>
+  <key>KeepAlive</key>
+  <true/>
+</dict>
+</plist>

@@ -1,0 +1,11 @@
+#!/bin/zsh
+# Run with "light" or "dark" by dark-notify (launchd/local.appearance-sync.plist)
+# whenever macOS switches appearance.
+
+# The zsh prompt reads this before each prompt and recolours itself on change.
+mkdir -p ~/.cache
+print -r -- $1 > ~/.cache/appearance
+
+# Fails harmlessly when no tmux server is running; .tmux.conf sets it on start.
+/opt/homebrew/bin/tmux set -s theme $1 2>/dev/null
+exit 0
