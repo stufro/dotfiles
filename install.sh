@@ -127,6 +127,16 @@ if [[ -x "$HOME/.tmux/plugins/tpm/bin/install_plugins" ]]; then
   "$HOME/.tmux/plugins/tpm/bin/install_plugins"
 fi
 
+# Follow macOS light/dark mode in tmux (see launchd/local.tmux-theme-sync.plist).
+mkdir -p "$HOME/Library/LaunchAgents"
+link "$CONFIG_DIR/launchd/local.tmux-theme-sync.plist" "$HOME/Library/LaunchAgents/local.tmux-theme-sync.plist"
+if launchctl print "gui/$(id -u)/local.tmux-theme-sync" >/dev/null 2>&1; then
+  skip "tmux theme sync agent loaded"
+else
+  launchctl bootstrap "gui/$(id -u)" "$HOME/Library/LaunchAgents/local.tmux-theme-sync.plist"
+  info "loaded tmux theme sync agent"
+fi
+
 # --- 6. asdf runtimes ---
 if command -v asdf >/dev/null 2>&1; then
   for plugin in ruby nodejs golang rust yarn; do

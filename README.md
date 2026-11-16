@@ -63,6 +63,7 @@ deleting. (`*.bak` is gitignored, since `~/.zshrc.bak` may contain credentials.)
 | `zsh/.p10k.zsh` | `~/.p10k.zsh` | powerlevel10k prompt |
 | `zsh/zshrc.local.example` | — | template for the untracked local/secrets file |
 | `.tmux.conf` | `~/.tmux.conf` | tmux + tpm plugin list |
+| `launchd/local.tmux-theme-sync.plist` | `~/Library/LaunchAgents/` | switches tmux's light/dark theme with macOS (via `dark-notify`) |
 | `nvim/` | — | read from `~/.config/nvim` directly |
 | `htop/`, `gtk-2.0/`, `git/ignore` | — | read from `~/.config` directly |
 | `claude/CLAUDE.md` | `~/.claude/CLAUDE.md` | Claude Code preferences |

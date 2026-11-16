@@ -7,12 +7,14 @@
 # then drop any entry not in `brew leaves` and delete the description comments
 # that `dump` adds.
 
+tap 'cormacrelf/tap'
 brew 'ansible'
 brew 'asdf'
 brew 'awscli'
 brew 'cmatrix'
 brew 'colima'
 brew 'coreutils'
+brew 'cormacrelf/tap/dark-notify'
 brew 'curl'
 brew 'docker'
 brew 'docker-buildx'
