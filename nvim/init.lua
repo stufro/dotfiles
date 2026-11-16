@@ -63,7 +63,7 @@ require("pckr").add{
     }
   };
   -- appearance
-  "gmr458/vscode_modern_theme.nvim";
+  "catppuccin/nvim";
   { "nvimdev/dashboard-nvim",
     event = "VimEnter",
     config = function()
@@ -114,59 +114,15 @@ require("pckr").add{
 -- ##############
 -- # appearance #
 -- ##############
-require("vscode_modern").setup {
-  cursorline = true,
-  transparent_background = false,
-  nvim_tree_darker = true,
+-- Catppuccin matches the iTerm2 profile: Latte when the terminal is light,
+-- Mocha when dark. Nvim re-queries the terminal's background when it reports a
+-- theme change, and a new 'background' reloads the colorscheme with the other
+-- flavour, so it follows macOS appearance without restarting.
+require("catppuccin").setup {
+  flavour = "auto",
+  background = { light = "latte", dark = "mocha" },
 }
-vim.cmd.colorscheme("vscode_modern")
-
--- The theme predates these treesitter groups, so they fall back to defaults
--- that don't match VS Code: symbols inherit @string (orange) instead of the
--- constant blue, and def/class/end land on @keyword (blue) rather than the
--- control-flow purple. Colours below are the theme's own palette values.
-local vscode = {
-  purple = "#C586C0", -- keyword_control_flow: def, end, class, if, return
-  blue = "#569CD6", -- keyword: and, or, not, self
-  symbol = "#4FC1FF", -- constant: :a_symbol
-}
-
-local function apply_syntax_overrides()
-  local set = function(group, opts) vim.api.nvim_set_hl(0, group, opts) end
-
-  -- Ruby symbols. Treesitter captures these as @string.special.symbol, which
-  -- inherits from @string; VS Code shows them in the constant blue.
-  set("@string.special.symbol", { fg = vscode.symbol })
-  set("@symbol", { fg = vscode.symbol })
-
-  -- Structural and control-flow keywords -> purple. This includes bare
-  -- @keyword, which in Ruby is `do`, `begin`, and the `end` closing a class,
-  -- module or block -- those get no more specific capture, so leaving
-  -- @keyword blue left them mismatched against the purple `end` of a def or
-  -- if (which do get a second, narrower capture).
-  for _, group in ipairs({
-    "@keyword",
-    "@keyword.function",
-    "@keyword.type",
-    "@keyword.return",
-    "@keyword.conditional",
-    "@keyword.repeat",
-    "@keyword.exception",
-  }) do
-    set(group, { fg = vscode.purple })
-  end
-
-  -- Operator keywords stay blue, matching VS Code: `and`, `or`, `not`, `in`.
-  -- (`self` is @variable.builtin, not a keyword, so it is unaffected.)
-  set("@keyword.operator", { fg = vscode.blue })
-end
-
-apply_syntax_overrides()
--- Re-apply if the colorscheme is reloaded, which resets all highlight groups.
-vim.api.nvim_create_autocmd("ColorScheme", {
-  group = vim.api.nvim_create_augroup("UserSyntaxOverrides", {}),
-  callback = apply_syntax_overrides,
-})
+vim.cmd.colorscheme("catppuccin")
 
 vim.cmd("set number")
 vim.cmd("set nowrap")
