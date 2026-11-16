@@ -18,7 +18,7 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 # --- oh-my-zsh ---
 export ZSH="$HOME/.oh-my-zsh"
 ZSH_THEME="powerlevel10k/powerlevel10k"
-plugins=(git macos bundler asdf zsh-autosuggestions)
+plugins=(git macos bundler asdf aws zsh-autosuggestions)
 source "$ZSH/oh-my-zsh.sh"
 
 # --- PATH ---
