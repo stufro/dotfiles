@@ -1,11 +1,11 @@
 #!/bin/zsh
-# Run with "light" or "dark" by dark-notify (launchd/local.appearance-sync.plist)
-# whenever macOS switches appearance.
+# Run with "light" or "dark" by dark-notify: from launchd/local.appearance-sync.plist
+# whenever macOS switches appearance, and from .tmux.conf when the server starts.
 
-# The zsh prompt reads this before each prompt and recolours itself on change.
-mkdir -p ~/.cache
-print -r -- $1 > ~/.cache/appearance
+# Colour 236 is the zsh prompt bar. tmux draws it through pane-colours, so prompts
+# already on screen and in scrollback change along with new ones.
+if [[ $1 == light ]]; then bar='#dce0e8'; else bar='#313244'; fi
 
-# Fails harmlessly when no tmux server is running; .tmux.conf sets it on start.
-/opt/homebrew/bin/tmux set -s theme $1 2>/dev/null
+# Fails harmlessly when no tmux server is running.
+/opt/homebrew/bin/tmux set -s theme $1 \; set -gw 'pane-colours[236]' $bar 2>/dev/null
 exit 0

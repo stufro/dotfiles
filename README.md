@@ -63,7 +63,7 @@ deleting. (`*.bak` is gitignored, since `~/.zshrc.bak` may contain credentials.)
 | `zsh/.p10k.zsh` | `~/.p10k.zsh` | powerlevel10k prompt |
 | `zsh/zshrc.local.example` | — | template for the untracked local/secrets file |
 | `.tmux.conf` | `~/.tmux.conf` | tmux + tpm plugin list |
-| `launchd/local.appearance-sync.plist` | `~/Library/LaunchAgents/` | runs `scripts/appearance-changed` when macOS switches light/dark, so the prompt and tmux follow it |
+| `launchd/local.appearance-sync.plist` | `~/Library/LaunchAgents/` | runs `scripts/appearance-changed` when macOS switches light/dark, so tmux and the prompt bar follow it |
 | `nvim/` | — | read from `~/.config/nvim` directly |
 | `htop/`, `gtk-2.0/`, `git/ignore` | — | read from `~/.config` directly |
 | `claude/CLAUDE.md` | `~/.claude/CLAUDE.md` | Claude Code preferences |

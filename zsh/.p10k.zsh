@@ -161,17 +161,10 @@
     typeset -g POWERLEVEL9K_EMPTY_LINE_RIGHT_PROMPT_FIRST_SEGMENT_START_SYMBOL='%{%}'
   fi
 
-  # Bar colour follows macOS appearance: Catppuccin Latte crust in light mode, Mocha surface0 in
-  # dark. scripts/appearance-changed records the mode, and _p10k_follow_appearance at the end of
-  # this file re-sources it when the mode changes. Segment colours below use ANSI 1-4 so they
-  # come from the terminal theme.
-  typeset -g _p10k_appearance=dark
-  [[ -r ~/.cache/appearance ]] && _p10k_appearance=$(<~/.cache/appearance)
-  if [[ $_p10k_appearance == light ]]; then
-    typeset -g POWERLEVEL9K_BACKGROUND='#dce0e8'
-  else
-    typeset -g POWERLEVEL9K_BACKGROUND='#313244'
-  fi
+  # Bar colour. Inside tmux, scripts/appearance-changed remaps 236 through pane-colours to
+  # Catppuccin Latte crust or Mocha surface0, so prompts already drawn change with macOS
+  # appearance too. Segment colours below use ANSI 1-4 so they come from the terminal theme.
+  typeset -g POWERLEVEL9K_BACKGROUND=236
 
   # Separator between same-color segments on the left.
   typeset -g POWERLEVEL9K_LEFT_SUBSEGMENT_SEPARATOR='%244F\uE0B1'
@@ -1742,16 +1735,6 @@
 
 # Tell `p10k configure` which file it should overwrite.
 typeset -g POWERLEVEL9K_CONFIG_FILE=${${(%):-%x}:a}
-
-# Re-source this file when macOS appearance changes, so the bar colour above follows it. Runs
-# before p10k's own precmd, so the new colours apply to the prompt about to be drawn.
-function _p10k_follow_appearance() {
-  local mode=dark
-  [[ -r ~/.cache/appearance ]] && mode=$(<~/.cache/appearance)
-  [[ $mode == $_p10k_appearance ]] || source $POWERLEVEL9K_CONFIG_FILE
-}
-(( ${precmd_functions[(Ie)_p10k_follow_appearance]} )) ||
-  precmd_functions=(_p10k_follow_appearance $precmd_functions)
 
 (( ${#p10k_config_opts} )) && setopt ${p10k_config_opts[@]}
 'builtin' 'unset' 'p10k_config_opts'
